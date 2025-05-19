@@ -6,18 +6,16 @@ import prisma from "@/lib/prisma";
 import { ITEM_PER_PAGE } from "@/lib/settings";
 import { Announcement, Class, Prisma } from "@prisma/client";
 import Image from "next/image";
-import { auth } from "@clerk/nextjs/server";
-
+import { getCurrentUser } from "@/lib/auth";
 
 type AnnouncementList = Announcement & { class: Class };
+
 const AnnouncementListPage = async ({
   searchParams,
 }: {
   searchParams: { [key: string]: string | undefined };
 }) => {
-  
-  const { userId, sessionClaims } = auth();
-  const role = (sessionClaims?.metadata as { role?: string })?.role;
+  const { userId, role } = getCurrentUser();
   const currentUserId = userId;
   
   const columns = [
